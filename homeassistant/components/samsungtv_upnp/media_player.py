@@ -238,13 +238,12 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
 
     @property
     def device_info(self):
+        """Return device info."""
         return {
-            'identifiers': {
-                (DOMAIN, self.unique_id)
-            },
-            'name': self.name,
-            'manufacturer': self._device.manufacturer,
-            'model': self._device.model_name,
+            "identifiers": {(DOMAIN, self.unique_id)},
+            "name": self.name,
+            "manufacturer": self._device.manufacturer,
+            "model": self._device.model_name,
         }
 
     @property
@@ -301,18 +300,13 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
 
     @property
     def media_channel(self):
-        """Channel currently playing"""
+        """Channel currently playing."""
         return self._media_channel
 
     @property
     def media_title(self):
         """Title of current playing media."""
         return self._media_title
-
-    @property
-    def media_content_type(self):
-        """Content type of current playing media."""
-        return MEDIA_TYPE_CHANNEL if self._media_channel else None
 
     async def async_select_source(self, source):
         """Select input source."""
@@ -328,10 +322,10 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
 
         try:
             result = await action.async_call(Source=source, ID=id, UiID=0)
-        except:
+        except Exception:
             result = None
         if not result or result.get("Result") != "OK":
-            _LOGGER.debug("unable to select source")
+            _LOGGER.debug(f"unable to get select source: {result}")
             return
 
         self._source = source
@@ -347,10 +341,10 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
 
         try:
             result = await action.async_call()
-        except:
+        except Exception:
             result = None
         if not result or result.get("Result") != "OK":
-            _LOGGER.debug("unable to get sources")
+            _LOGGER.debug(f"unable to get sources: {result}")
             return
 
         from collections import OrderedDict
@@ -385,10 +379,10 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
 
         try:
             result = await action.async_call()
-        except:
+        except Exception:
             result = None
         if not result or result.get("Result") != "OK":
-            _LOGGER.debug("unable to current channel")
+            _LOGGER.debug(f"unable to get current channel: {result}")
             return
 
         from xml.dom.minidom import parseString
@@ -405,10 +399,10 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
 
         try:
             result = await action.async_call()
-        except:
+        except Exception:
             result = None
         if not result or result.get("Result") != "OK":
-            _LOGGER.debug("unable to get program info")
+            _LOGGER.debug(f"unable to get program info: {result}")
             return
         url = result.get("CurrentProgInfoURL")
 
