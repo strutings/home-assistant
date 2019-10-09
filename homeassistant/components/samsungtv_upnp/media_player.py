@@ -27,6 +27,7 @@ from homeassistant.helpers.typing import HomeAssistantType
 import homeassistant.helpers.config_validation as cv
 from homeassistant.util import get_local_ip
 
+DOMAIN = "samsungtv_upnp"
 _LOGGER = logging.getLogger(__name__)
 
 SAMSUNGTV_UPNP_DATA = "samsungtv_upnp"
@@ -234,6 +235,17 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
     def unique_id(self) -> str:
         """Return an unique ID."""
         return self._device.udn
+
+    @property
+    def device_info(self):
+        return {
+            'identifiers': {
+                (DOMAIN, self.unique_id)
+            },
+            'name': self.name,
+            'manufacturer': self._device.manufacturer,
+            'model': self._device.model_name,
+        }
 
     @property
     def supported_features(self):
