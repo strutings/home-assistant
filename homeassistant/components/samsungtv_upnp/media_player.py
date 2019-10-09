@@ -248,7 +248,10 @@ class SamsungTvUpnpDevice(MediaPlayerDevice):
     @property
     def source_list(self):
         """List of available input sources."""
-        return list(self._source_list)
+        if self._source_list is None:
+            return []
+        else:
+            return list(self._source_list)
 
     @property
     def source(self):
